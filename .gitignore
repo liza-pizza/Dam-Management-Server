@@ -1,0 +1,6 @@
+.flaskenv
+app/__pycache__
+migrations
+.vscode
+venv
+app.db

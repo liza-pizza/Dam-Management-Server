@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+    <head>
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/select.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com"> 
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+
+    </head>
+<div class="container">
+    <div class="card">
+      <div class="content">
+       
+        <form action="" method="post" novalidate>
+            {{ form.hidden_tag() }}
+            <p>
+                
+                {{ form.sensor.label.sensor }}<br>
+                {{ form.sensor(size=32) }}
+                
+            </p>
+            <p> <a href="#">{{ form.submit() }}</a></p>
+        </form>
+      </div>
+    </div>
+      
+  </div>
+
+</html>

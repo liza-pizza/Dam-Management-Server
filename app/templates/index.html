@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+    <head>
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/index.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com"> 
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+
+    </head>
+<div class="container">
+    <div class="card">
+      <div class="content">
+        <h2>08</h2>
+        <h3>Final Project</h3>
+        <p>Integrated Dam Management</p>
+        <a href={{ url_for( 'allSensor') }}>Data of all sensors</a>
+        <a href={{ url_for ('selectSensor') }}>Data of one sensor</a>
+        <a href="#">Predictions</a>
+      </div>
+    </div>
+      
+  </div>
+
+</html>
