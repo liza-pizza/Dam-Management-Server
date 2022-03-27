@@ -1,6 +1,7 @@
 .flaskenv
-app/__pycache__
+__pycache__
 migrations
 .vscode
 venv
 app.db
+.DS_Store
