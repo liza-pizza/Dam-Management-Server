@@ -41,7 +41,8 @@ def addDamData():
     json = request.get_json()
 
     try:
-        sensorVals = SensorValue(sensor = json['sensor'], flow_rate = json['flow_rate'])
+        sensorVals = SensorValue(sensor = json['sensor'], flow_rate = json['flow_rate'], site = json['site'])
+        
         db.session.add(sensorVals)
         db.session.commit()
     except Exception: 

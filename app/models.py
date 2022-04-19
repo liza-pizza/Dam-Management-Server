@@ -13,3 +13,4 @@ class SensorValue(db.Model):
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     sensor = db.Column(db.Integer)
     flow_rate = db.Column(db.Integer)
+    site = db.Column(db.Integer)
