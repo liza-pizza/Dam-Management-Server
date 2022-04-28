@@ -3,6 +3,7 @@ from flask import request,render_template, url_for,redirect
 from app.models import SensorValue
 import sys
 from app.forms import SelectSensorForm
+from app.forms import SelectSiteForm
 
 
 @app.route('/')
@@ -27,12 +28,31 @@ def selectSensor():
 
     return render_template('select.html', form = form)
 
+@app.route('/select-site', methods=['GET', 'POST'])
+def selectSite():
+    form = SelectSiteForm()
+    if SensorValue.query.filter_by(site = form.site.data).first() is not None:
+            return redirect(url_for( 'particularSite', siteID = form.site.data))
+    return render_template('selectSite.html', form = form)
+
 
 @app.route('/dam-information/get/<sensorID>',methods=['GET'])
 def particularSensor(sensorID):
     vals = SensorValue.query.filter_by(sensor = sensorID).all()
     print(vals)
     return render_template('sensorData.html', sensorVals = vals)
+
+import json
+@app.route('/dam-information/get/site/<siteID>',methods=['GET'])
+def particularSite(siteID):
+    vals = SensorValue.query.filter_by(site = siteID).all()
+    graphVals = {"x":[], "y":[], "type":'scatter'}
+    for val in vals:
+        
+        graphVals["x"].append(val.timestamp.strftime('%m/%d/%Y'))
+        graphVals["y"].append(val.flow_rate)
+
+    return render_template('siteData.html', siteVals = vals, graphVals = json.dumps(graphVals))
 
 
 @app.route('/dam-information/update',methods=['POST'])

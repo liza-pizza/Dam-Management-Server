@@ -18,12 +18,13 @@
       type="text/css"
       href="{{ url_for('static',filename='styles/sensorData.css') }}"
     />
+    <script src="https://cdn.plot.ly/plotly-2.11.1.min.js"></script>
   </head>
 
   <div class="container">
     <div class="card">
       <div class="content">
-        <table id="data" class="table">
+        <table id="data" class="table siteTable">
           <thead>
             <tr>
               <th>Site</th>
@@ -33,7 +34,7 @@
             </tr>
           </thead>
           <tbody>
-            {% for val in sensorVals %}
+            {% for val in siteVals %}
             <tr>
               <td>{{val.site}}</td>
               <td>{{ val.sensor }}</td>
@@ -44,6 +45,14 @@
           </tbody>
         </table>
       </div>
+      <div id="myDiv" style="margin-bottom: 3rem">
+        <!-- Plotly chart will be drawn inside this DIV -->
+      </div>
     </div>
   </div>
+  <script type="text/javascript">
+    var data = [{{graphVals | safe}}];
+
+    Plotly.newPlot("myDiv", data);
+  </script>
 </html>

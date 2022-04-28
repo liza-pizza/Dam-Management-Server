@@ -17,11 +17,7 @@
     <div class="card">
       <div class="content">
         <form action="" method="post" novalidate>
-          {{ form.hidden_tag() }}
-          <p>
-            {{ form.sensor.label.sensor }}<br />
-            {{ form.sensor(size=32) }}
-          </p>
+          <p>{{ form.site }}</p>
           <p><a href="#">{{ form.submit() }}</a></p>
         </form>
       </div>

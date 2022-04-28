@@ -7,3 +7,9 @@ from app.models import SensorValue
 class SelectSensorForm(FlaskForm): 
     sensor = IntegerField('Sensor Number')
     submit = SubmitField('Submit')
+
+
+class SelectSiteForm(FlaskForm):
+    site = IntegerField('Site')
+    submit = SubmitField('Submit')
+
