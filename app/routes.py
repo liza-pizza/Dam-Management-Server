@@ -4,6 +4,7 @@ from app.models import SensorValue
 import sys
 from app.forms import SelectSensorForm
 from app.forms import SelectSiteForm
+import json
 
 
 @app.route('/')
@@ -31,8 +32,12 @@ def selectSensor():
 @app.route('/select-site', methods=['GET', 'POST'])
 def selectSite():
     form = SelectSiteForm()
-    if SensorValue.query.filter_by(site = form.site.data).first() is not None:
+    
+    if form.validate_on_submit():
+        if SensorValue.query.filter_by(site = form.site.data).first() is not None:
             return redirect(url_for( 'particularSite', siteID = form.site.data))
+           
+
     return render_template('selectSite.html', form = form)
 
 
@@ -42,9 +47,10 @@ def particularSensor(sensorID):
     print(vals)
     return render_template('sensorData.html', sensorVals = vals)
 
-import json
+
 @app.route('/dam-information/get/site/<siteID>',methods=['GET'])
 def particularSite(siteID):
+
     vals = SensorValue.query.filter_by(site = siteID).all()
     graphVals = {"x":[], "y":[], "type":'scatter'}
     for val in vals:
