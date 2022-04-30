@@ -1,5 +1,5 @@
-from app import app, db
-from flask import request,render_template, url_for,redirect
+from app import app, db, oauth
+from flask import request,render_template, url_for,redirect,session
 from app.models import SensorValue
 import sys
 from app.forms import SelectSensorForm
@@ -7,10 +7,29 @@ from app.forms import SelectSiteForm
 import json
 
 
+
 @app.route('/')
+@app.route('/login')
+def login():
+    redirect_uri = url_for('auth', _external=True)
+    return oauth.google.authorize_redirect(redirect_uri)
+
+
+
+@app.route('/auth')
+def auth():
+    print("here")
+    token = oauth.google.authorize_access_token()
+    user = token.get('userinfo')
+    if user:
+        session['user'] = user
+    return redirect(url_for('index'))
+
 @app.route('/index')
 def index():
+    print('here')
     return render_template('index.html')
+
 
 @app.route('/dam-information/get-all',methods=['GET'])
 def allSensor():

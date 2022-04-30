@@ -5,3 +5,4 @@ migrations
 venv
 app.db
 .DS_Store
+.envrc
