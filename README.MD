@@ -12,8 +12,14 @@ source venv/bin/activate
 pip install -r requirements.txt
 
 ```
+3.Add google creds as env variables
 
-3. try running the thingy
+```
+export GOOGLE_CLIENT_ID
+export GOOGLE_CLIENT_SECRET
+```
+
+4. try running the thingy
 ```
 
 export FLASK_APP=prject.py
@@ -24,7 +30,7 @@ gunicorn -b 0.0.0.0:8000 app:app
 
 ```
 
-4. Get migrations in place. this is using sqlite 
+5. Get migrations in place. this is using sqlite 
  
  ```
 flask db init
