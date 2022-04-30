@@ -9,7 +9,7 @@ import json
 
 
 
-@app.route('/')
+
 @app.route('/login')
 def login():
     redirect_uri = url_for('auth', _external=True)
@@ -26,15 +26,14 @@ def auth():
         session['user'] = user
     return redirect(url_for('index'))
 
+@app.route('/')
 @app.route('/index')
-@login_required
 def index():
     print('here')
     return render_template('index.html')
 
 
 @app.route('/dam-information/get-all',methods=['GET'])
-@login_required
 def allSensor():
    
     vals = SensorValue.query.order_by(SensorValue.timestamp.desc()).all()
@@ -42,7 +41,7 @@ def allSensor():
     return render_template('sensorData.html', sensorVals = vals)
 
 @app.route('/select-sensor', methods=['GET', 'POST'])
-@login_required
+
 def selectSensor():
     form = SelectSensorForm()
 
@@ -53,7 +52,6 @@ def selectSensor():
     return render_template('select.html', form = form)
 
 @app.route('/select-site', methods=['GET', 'POST'])
-@login_required
 def selectSite():
     form = SelectSiteForm()
     
@@ -66,7 +64,6 @@ def selectSite():
 
 
 @app.route('/dam-information/get/<sensorID>',methods=['GET'])
-@login_required
 def particularSensor(sensorID):
     vals = SensorValue.query.filter_by(sensor = sensorID).all()
     print(vals)
@@ -74,7 +71,6 @@ def particularSensor(sensorID):
 
 
 @app.route('/dam-information/get/site/<siteID>',methods=['GET'])
-@login_required
 def particularSite(siteID):
 
     vals = SensorValue.query.filter_by(site = siteID).all()
@@ -88,7 +84,6 @@ def particularSite(siteID):
 
 
 @app.route('/dam-information/update',methods=['POST'])
-@login_required
 def addDamData():
 
     json = request.get_json()
