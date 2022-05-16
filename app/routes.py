@@ -19,7 +19,7 @@ def login():
 
 @app.route('/auth')
 def auth():
-    print("here")
+
     token = oauth.google.authorize_access_token()
     user = token.get('userinfo')
     if user:
@@ -29,7 +29,6 @@ def auth():
 @app.route('/index')
 @login_required
 def index():
-    print('here')
     return render_template('index.html')
 
 
