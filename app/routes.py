@@ -78,7 +78,7 @@ def particularSite(siteID):
     for val in vals:
         
         graphVals["x"].append(val.timestamp.strftime('%m/%d/%Y'))
-        graphVals["y"].append(val.flow_rate)
+        graphVals["y"].append(val.water_depth)
 
     return render_template('siteData.html', siteVals = vals, graphVals = json.dumps(graphVals))
 
@@ -89,7 +89,7 @@ def addDamData():
     json = request.get_json()
 
     try:
-        sensorVals = SensorValue(sensor = json['sensor'], flow_rate = json['flow_rate'], site = json['site'])
+        sensorVals = SensorValue(sensor = json['sensor'], water_depth = json['water_depth'], site = json['site'])
         
         db.session.add(sensorVals)
         db.session.commit()

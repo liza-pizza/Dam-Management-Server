@@ -12,5 +12,5 @@ class SensorValue(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     sensor = db.Column(db.Integer)
-    flow_rate = db.Column(db.Integer)
+    water_depth = db.Column(db.Integer)
     site = db.Column(db.Integer)
