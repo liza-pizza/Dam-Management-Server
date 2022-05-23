@@ -38,7 +38,7 @@ def allSensor():
    
     vals = SensorValue.query.order_by(SensorValue.timestamp.desc()).all()
     print(vals)
-    return render_template('sensorData.html', sensorVals = vals)
+    return render_template('allSensor.html', sensorVals = vals)
 
 @app.route('/select-sensor', methods=['GET', 'POST'])
 
@@ -67,7 +67,13 @@ def selectSite():
 def particularSensor(sensorID):
     vals = SensorValue.query.filter_by(sensor = sensorID).all()
     print(vals)
-    return render_template('sensorData.html', sensorVals = vals)
+    graphVals = {"x":[], "y":[], "type":'scatter'}
+    for val in vals:
+        graphVals["x"].append(val.timestamp.strftime('%m/%d/%Y, %H:%M:%S'))
+        graphVals["y"].append(val.water_depth)
+  
+    print(graphVals)
+    return render_template('sensorData.html', sensorVals = vals, graphVals = json.dumps(graphVals))
 
 
 @app.route('/dam-information/get/site/<siteID>',methods=['GET'])
@@ -77,7 +83,7 @@ def particularSite(siteID):
     graphVals = {"x":[], "y":[], "type":'scatter'}
     for val in vals:
         
-        graphVals["x"].append(val.timestamp.strftime('%m/%d/%Y'))
+        graphVals["x"].append(val.timestamp.strftime('%m/%d/%Y, %H:%M:%S'))
         graphVals["y"].append(val.water_depth)
 
     return render_template('siteData.html', siteVals = vals, graphVals = json.dumps(graphVals))
