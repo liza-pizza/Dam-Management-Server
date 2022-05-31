@@ -38,7 +38,7 @@ def allSensor():
    
     vals = SensorValue.query.order_by(SensorValue.timestamp.desc()).all()
     print(vals)
-    return render_template('allSensor.html', sensorVals = vals)
+    return render_template('sensorData.html', sensorVals = vals)
 
 @app.route('/select-sensor', methods=['GET', 'POST'])
 
