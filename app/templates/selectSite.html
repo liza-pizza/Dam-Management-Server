@@ -16,12 +16,15 @@
   <div class="container">
     <div class="card">
       <div class="content">
+
+        <p>Select Site</p>
+
         <form action="" method="post" novalidate>
         
           {{ form.hidden_tag() }}
           <p>
             {{ form.site.label.sensor }}<br />
-            {{ form.site(size=32) }}
+            {{ form.site }}
           </p>
           <p><a href="#">{{ form.submit() }}</a></p>
         </form>

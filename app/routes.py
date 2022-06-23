@@ -26,11 +26,12 @@ def auth():
         session['user'] = user
     return redirect(url_for('index'))
 
+        
 @app.route('/')
 @app.route('/index')
 def index():
-    print('here')
     return render_template('index.html')
+
 
 
 @app.route('/dam-information/get-all',methods=['GET'])
@@ -45,6 +46,11 @@ def allSensor():
 def selectSensor():
     form = SelectSensorForm()
 
+    setOfSensors = set([])
+    for a in SensorValue.query.all():
+        setOfSensors.add(a.sensor) 
+   
+    form.sensor.choices = [(g) for g in setOfSensors]
     if form.validate_on_submit():
         if SensorValue.query.filter_by(sensor = form.sensor.data).first() is not None:
             return redirect(url_for( 'particularSensor', sensorID = form.sensor.data))
@@ -54,7 +60,13 @@ def selectSensor():
 @app.route('/select-site', methods=['GET', 'POST'])
 def selectSite():
     form = SelectSiteForm()
+
+    setOfSites = set([])
+    for a in SensorValue.query.all():
+        setOfSites.add(a.site) 
     
+    form.site.choices = [(g) for g in setOfSites]
+
     if form.validate_on_submit():
         if SensorValue.query.filter_by(site = form.site.data).first() is not None:
             return redirect(url_for( 'particularSite', siteID = form.site.data))
