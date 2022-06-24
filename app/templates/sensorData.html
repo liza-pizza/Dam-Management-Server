@@ -18,32 +18,44 @@
       type="text/css"
       href="{{ url_for('static',filename='styles/sensorData.css') }}"
     />
+    <script src="https://cdn.plot.ly/plotly-2.11.1.min.js"></script>
   </head>
 
-  <div class="container">
-    <div class="card">
+  
       <div class="content">
-        <table id="data" class="table">
+        <table id="data" class="table siteTable">
           <thead>
             <tr>
-              <th>Site</th>
               <th>Sensor Number</th>
-              <th>Flow Rates</th>
+              <th>Site</th>
+              <th>Water Depth</th>
               <th>Timestamp</th>
             </tr>
           </thead>
           <tbody>
             {% for val in sensorVals %}
             <tr>
-              <td>{{val.site}}</td>
               <td>{{ val.sensor }}</td>
-              <td>{{ val.flow_rate }}</td>
+              <td>{{val.site}}</td>
+              <td>{{ val.water_depth }}</td>
               <td>{{ val.timestamp }}</td>
             </tr>
             {% endfor %}
           </tbody>
         </table>
       </div>
-    </div>
-  </div>
+
+  {% if graphVals is defined %}
+      <div id="myDiv" style="margin-bottom: 3rem">
+        <!-- Plotly chart will be drawn inside this DIV -->
+      </div>
+  {% endif %}
+     
+
+
+  <script type="text/javascript">
+    var data = [{{graphVals | safe}}];
+    Plotly.newPlot("myDiv", data);
+  </script>
+
 </html>
