@@ -9,7 +9,7 @@ import json
 
 
 
-@app.route('/')
+
 @app.route('/login')
 def login():
     redirect_uri = url_for('auth', _external=True)
@@ -26,14 +26,15 @@ def auth():
         session['user'] = user
     return redirect(url_for('index'))
 
+        
+@app.route('/')
 @app.route('/index')
-@login_required
 def index():
     return render_template('index.html')
 
 
+
 @app.route('/dam-information/get-all',methods=['GET'])
-@login_required
 def allSensor():
    
     vals = SensorValue.query.order_by(SensorValue.timestamp.desc()).all()
@@ -41,10 +42,15 @@ def allSensor():
     return render_template('sensorData.html', sensorVals = vals)
 
 @app.route('/select-sensor', methods=['GET', 'POST'])
-@login_required
+
 def selectSensor():
     form = SelectSensorForm()
 
+    setOfSensors = set([])
+    for a in SensorValue.query.all():
+        setOfSensors.add(a.sensor) 
+   
+    form.sensor.choices = [(g) for g in setOfSensors]
     if form.validate_on_submit():
         if SensorValue.query.filter_by(sensor = form.sensor.data).first() is not None:
             return redirect(url_for( 'particularSensor', sensorID = form.sensor.data))
@@ -52,10 +58,15 @@ def selectSensor():
     return render_template('select.html', form = form)
 
 @app.route('/select-site', methods=['GET', 'POST'])
-@login_required
 def selectSite():
     form = SelectSiteForm()
+
+    setOfSites = set([])
+    for a in SensorValue.query.all():
+        setOfSites.add(a.site) 
     
+    form.site.choices = [(g) for g in setOfSites]
+
     if form.validate_on_submit():
         if SensorValue.query.filter_by(site = form.site.data).first() is not None:
             return redirect(url_for( 'particularSite', siteID = form.site.data))
@@ -65,35 +76,38 @@ def selectSite():
 
 
 @app.route('/dam-information/get/<sensorID>',methods=['GET'])
-@login_required
 def particularSensor(sensorID):
     vals = SensorValue.query.filter_by(sensor = sensorID).all()
     print(vals)
-    return render_template('sensorData.html', sensorVals = vals)
+    graphVals = {"x":[], "y":[], "type":'scatter'}
+    for val in vals:
+        graphVals["x"].append(val.timestamp.strftime('%m/%d/%Y, %H:%M:%S'))
+        graphVals["y"].append(val.water_depth)
+  
+    print(graphVals)
+    return render_template('sensorData.html', sensorVals = vals, graphVals = json.dumps(graphVals))
 
 
 @app.route('/dam-information/get/site/<siteID>',methods=['GET'])
-@login_required
 def particularSite(siteID):
 
     vals = SensorValue.query.filter_by(site = siteID).all()
     graphVals = {"x":[], "y":[], "type":'scatter'}
     for val in vals:
         
-        graphVals["x"].append(val.timestamp.strftime('%m/%d/%Y'))
-        graphVals["y"].append(val.flow_rate)
+        graphVals["x"].append(val.timestamp.strftime('%m/%d/%Y, %H:%M:%S'))
+        graphVals["y"].append(val.water_depth)
 
     return render_template('siteData.html', siteVals = vals, graphVals = json.dumps(graphVals))
 
 
 @app.route('/dam-information/update',methods=['POST'])
-@login_required
 def addDamData():
 
     json = request.get_json()
 
     try:
-        sensorVals = SensorValue(sensor = json['sensor'], flow_rate = json['flow_rate'], site = json['site'])
+        sensorVals = SensorValue(sensor = json['sensor'], water_depth = json['water_depth'], site = json['site'])
         
         db.session.add(sensorVals)
         db.session.commit()

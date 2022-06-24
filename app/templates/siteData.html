@@ -21,15 +21,14 @@
     <script src="https://cdn.plot.ly/plotly-2.11.1.min.js"></script>
   </head>
 
-  <div class="container">
-    <div class="card">
+  
       <div class="content">
         <table id="data" class="table siteTable">
           <thead>
             <tr>
               <th>Site</th>
               <th>Sensor Number</th>
-              <th>Flow Rates</th>
+              <th>Water Depth</th>
               <th>Timestamp</th>
             </tr>
           </thead>
@@ -38,21 +37,22 @@
             <tr>
               <td>{{val.site}}</td>
               <td>{{ val.sensor }}</td>
-              <td>{{ val.flow_rate }}</td>
+              <td>{{ val.water_depth }}</td>
               <td>{{ val.timestamp }}</td>
             </tr>
             {% endfor %}
           </tbody>
         </table>
       </div>
+
       <div id="myDiv" style="margin-bottom: 3rem">
         <!-- Plotly chart will be drawn inside this DIV -->
       </div>
-    </div>
-  </div>
+   
+
   <script type="text/javascript">
     var data = [{{graphVals | safe}}];
-
     Plotly.newPlot("myDiv", data);
   </script>
+
 </html>

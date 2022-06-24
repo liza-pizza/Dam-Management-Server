@@ -42,26 +42,26 @@ body {
   overflow-y: auto;
 }
 
-.container .card .content {
+.content {
   padding: 20px;
   text-align: center;
   transform: translateY(25px);
   transition: 0.5s;
 }
 
-.container .card .content thead {
+.content thead {
   font-size: 1.8em;
   color: #fff;
   z-index: 1;
 }
 
-.container .card .content tbody {
+.content tbody {
   font-size: 1em;
   color: #fff;
   font-weight: 300;
 }
 
-.container .card .content a {
+.content a {
   position: relative;
   display: inline-block;
   padding: 8px 20px;
