@@ -82,7 +82,7 @@ def particularSensor(sensorID):
     graphVals = {"x":[], "y":[], "type":'scatter'}
     for val in vals:
         graphVals["x"].append(val.timestamp.strftime('%m/%d/%Y, %H:%M:%S'))
-        graphVals["y"].append(val.water_depth)
+        graphVals["y"].append(val.reading)
   
     print(graphVals)
     return render_template('sensorData.html', sensorVals = vals, graphVals = json.dumps(graphVals))
@@ -96,7 +96,7 @@ def particularSite(siteID):
     for val in vals:
         
         graphVals["x"].append(val.timestamp.strftime('%m/%d/%Y, %H:%M:%S'))
-        graphVals["y"].append(val.water_depth)
+        graphVals["y"].append(val.reading)
 
     return render_template('siteData.html', siteVals = vals, graphVals = json.dumps(graphVals))
 
@@ -107,7 +107,7 @@ def addDamData():
     json = request.get_json()
 
     try:
-        sensorVals = SensorValue(sensor = json['sensor'], water_depth = json['water_depth'], site = json['site'])
+        sensorVals = SensorValue(sensor = json['sensor'], reading = json['water_depth'], site = json['site'])
         
         db.session.add(sensorVals)
         db.session.commit()
