@@ -1,6 +1,7 @@
-Idk start here
+# Steps to set up dev environment
 
-1. create venv if you want
+
+1. create venv (Optional)
 ```
 python3 -m venv venv
 source venv/bin/activate
@@ -17,6 +18,11 @@ pip install -r requirements.txt
 ```
 export GOOGLE_CLIENT_ID
 export GOOGLE_CLIENT_SECRET
+```
+
+3.2. Add Hot reload (Optional)
+```
+export FLASK_ENV=development
 ```
 
 4. try running the thingy
