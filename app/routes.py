@@ -9,7 +9,6 @@ import json
 
 
 
-
 @app.route('/login')
 def login():
     redirect_uri = url_for('auth', _external=True)
@@ -19,14 +18,14 @@ def login():
 
 @app.route('/auth')
 def auth():
-    print("here")
+
     token = oauth.google.authorize_access_token()
     user = token.get('userinfo')
     if user:
         session['user'] = user
     return redirect(url_for('index'))
 
-        
+       
 @app.route('/')
 @app.route('/index')
 def index():
@@ -42,7 +41,6 @@ def allSensor():
     return render_template('sensorData.html', sensorVals = vals)
 
 @app.route('/select-sensor', methods=['GET', 'POST'])
-
 def selectSensor():
     form = SelectSensorForm()
 
@@ -100,6 +98,9 @@ def particularSite(siteID):
 
     return render_template('siteData.html', siteVals = vals, graphVals = json.dumps(graphVals))
 
+@app.route('/prediction')
+def pred(): 
+    return render_template('pred.html')
 
 @app.route('/dam-information/update',methods=['POST'])
 def addDamData():
