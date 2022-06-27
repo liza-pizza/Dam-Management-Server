@@ -5,6 +5,7 @@ import sys
 from app.forms import SelectSensorForm
 from app.forms import SelectSiteForm
 from auth_decorator import login_required
+from datetime import datetime, timedelta
 import json
 
 
@@ -35,8 +36,8 @@ def index():
 
 @app.route('/dam-information/get-all',methods=['GET'])
 def allSensor():
-   
-    vals = SensorValue.query.order_by(SensorValue.timestamp.desc()).all()
+    seven_days_filter = datetime.today() - timedelta(days = 7)
+    vals = SensorValue.query.order_by(SensorValue.timestamp.desc()).filter(SensorValue.timestamp >= seven_days_filter).all()
     print(vals)
     return render_template('sensorData.html', sensorVals = vals)
 
@@ -57,8 +58,8 @@ def selectSensor():
 
 @app.route('/select-site', methods=['GET', 'POST'])
 def selectSite():
+ 
     form = SelectSiteForm()
-
     setOfSites = set([])
     for a in SensorValue.query.all():
         setOfSites.add(a.site) 
@@ -66,6 +67,7 @@ def selectSite():
     form.site.choices = [(g) for g in setOfSites]
 
     if form.validate_on_submit():
+       
         if SensorValue.query.filter_by(site = form.site.data).first() is not None:
             return redirect(url_for( 'particularSite', siteID = form.site.data))
            
@@ -75,7 +77,8 @@ def selectSite():
 
 @app.route('/dam-information/get/<sensorID>',methods=['GET'])
 def particularSensor(sensorID):
-    vals = SensorValue.query.filter_by(sensor = sensorID).all()
+    seven_days_filter = datetime.today() - timedelta(days = 7)
+    vals = SensorValue.query.filter_by(sensor = sensorID).filter(SensorValue.timestamp >= seven_days_filter).all()
     print(vals)
     graphVals = {"x":[], "y":[], "type":'scatter'}
     for val in vals:
@@ -88,8 +91,8 @@ def particularSensor(sensorID):
 
 @app.route('/dam-information/get/site/<siteID>',methods=['GET'])
 def particularSite(siteID):
-
-    vals = SensorValue.query.filter_by(site = siteID).all()
+    seven_days_filter = datetime.today() - timedelta(days = 7)
+    vals = SensorValue.query.filter_by(site = siteID).filter(SensorValue.timestamp >= seven_days_filter).all()
     graphVals = {"x":[], "y":[], "type":'scatter'}
     for val in vals:
         
