@@ -42,7 +42,14 @@
         {% endfor %}
       </select>
     </form>
-    
+
+    <div>
+      {% if siteVals|length > 0 %}
+      <div id="myDiv" style="margin-bottom: 3rem">
+        <!-- Plotly chart will be drawn inside this DIV -->
+      </div>
+      {% endif %}
+    </div>
     <div style="flex-direction: row; justify-content: space-around">
       <div>
         {% if siteVals|length > 0 %}
@@ -69,13 +76,7 @@
         </table>
         {% endif %}
       </div>
-      <div>
-        {% if siteVals|length > 0 %}
-        <div id="myDiv" style="margin-bottom: 3rem">
-          <!-- Plotly chart will be drawn inside this DIV -->
-        </div>
-        {% endif %}
-      </div>
+      
     </div>
   </div>
 
