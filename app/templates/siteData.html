@@ -22,6 +22,12 @@
   </head>
 
   <div class="content">
+
+    {% if siteVals is defined %}
+   <h1>Site Name: {{ siteName}} </h1>
+   <h1>Site Number: {{ siteNo }} </h1>
+    {% endif %}
+
     <form action="" method="post" novalidate>
       {{ form.hidden_tag() }}
       <select
@@ -36,7 +42,7 @@
         {% endfor %}
       </select>
     </form>
-
+    
     <div style="flex-direction: row; justify-content: space-around">
       <div>
         {% if siteVals|length > 0 %}

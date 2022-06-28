@@ -101,3 +101,9 @@ body {
   border-radius: 5px;
   color: rgb(204, 204, 0);
 }
+
+.content h1{
+  font-size: 1.8em;
+  color: #fff;
+  z-index: 1;
+}

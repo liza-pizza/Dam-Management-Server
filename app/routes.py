@@ -9,6 +9,20 @@ from auth_decorator import login_required
 from datetime import datetime, timedelta
 import json
 
+id_to_loc = {
+        '1': 'Location 1',
+        '2': 'Location 2',
+        '3': 'Location 3',
+        '4': 'Location 4',
+        '5': 'Location 5',
+        '6': 'Location 6',
+        '7': 'Location 7',
+        '8': 'Location 8',
+        '9': 'Location 9',
+        '10': 'Location 10',
+        '11': 'Location 11',
+        '12': 'Location 12'
+}
 
 
 @app.route('/login')
@@ -113,7 +127,7 @@ def particularSite(siteID):
             graphVals["y"].append(val.water_depth)
     
 
-    return render_template('siteData.html', siteVals = vals, graphVals = json.dumps(graphVals), form = form)
+    return render_template('siteData.html', siteVals = vals, graphVals = json.dumps(graphVals), form = form, siteName = id_to_loc[siteID], siteNo = siteID)
 
 @app.route('/prediction')
 def pred(): 
