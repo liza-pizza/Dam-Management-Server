@@ -1,3 +1,4 @@
+from sqlalchemy import true
 from app import app, db, oauth
 from flask import request,render_template, url_for,redirect,session
 from app.models import SensorValue
@@ -44,7 +45,6 @@ def allSensor():
 @app.route('/select-sensor', methods=['GET', 'POST'])
 def selectSensor():
     form = SelectSensorForm()
-
     setOfSensors = set([])
     for a in SensorValue.query.all():
         setOfSensors.add(a.sensor) 
@@ -58,7 +58,7 @@ def selectSensor():
 
 @app.route('/select-site', methods=['GET', 'POST'])
 def selectSite():
- 
+   
     form = SelectSiteForm()
     setOfSites = set([])
     for a in SensorValue.query.all():
@@ -89,17 +89,31 @@ def particularSensor(sensorID):
     return render_template('sensorData.html', sensorVals = vals, graphVals = json.dumps(graphVals))
 
 
-@app.route('/dam-information/get/site/<siteID>',methods=['GET'])
+@app.route('/dam-information/get/site/<siteID>',methods=['GET', 'POST'])
 def particularSite(siteID):
+    form = SelectSensorForm()
+    setOfSensors = set([])
+    for a in SensorValue.query.filter_by(site = siteID):
+        setOfSensors.add(a.sensor) 
+    
+    form.sensor.choices = [(g) for g in setOfSensors]
+    if form.is_submitted():
+        print(form.sensor.data)
+    
+    
     seven_days_filter = datetime.today() - timedelta(days = 7)
-    vals = SensorValue.query.filter_by(site = siteID).filter(SensorValue.timestamp >= seven_days_filter).all()
     graphVals = {"x":[], "y":[], "type":'scatter'}
-    for val in vals:
+    vals = []
+    if form.is_submitted():
+        vals = SensorValue.query.filter_by(site = siteID, sensor = form.sensor.data).filter(SensorValue.timestamp >= seven_days_filter).all()
         
-        graphVals["x"].append(val.timestamp.strftime('%m/%d/%Y, %H:%M:%S'))
-        graphVals["y"].append(val.water_depth)
+        for val in vals:
+            
+            graphVals["x"].append(val.timestamp.strftime('%m/%d/%Y, %H:%M:%S'))
+            graphVals["y"].append(val.water_depth)
+    
 
-    return render_template('siteData.html', siteVals = vals, graphVals = json.dumps(graphVals))
+    return render_template('siteData.html', siteVals = vals, graphVals = json.dumps(graphVals), form = form)
 
 @app.route('/prediction')
 def pred(): 

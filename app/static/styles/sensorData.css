@@ -77,3 +77,27 @@ body {
 .siteTable {
   margin-top: 7rem;
 }
+
+#id_sensor {
+  height: 60px;
+  border: none;
+  overflow: hidden;
+  background-color: inherit;
+}
+#id_sensor::-moz-focus-inner {
+  border: 0;
+}
+#id_sensor:focus {
+  outline: none;
+}
+#id_sensor option {
+  font-size: 1.2em;
+  padding: 10px 10px;
+  text-align: center;
+  margin-right: 20px;
+  display: inline-block;
+  cursor: pointer;
+  border: rgb(204, 204, 0) solid 1px;
+  border-radius: 5px;
+  color: rgb(204, 204, 0);
+}
