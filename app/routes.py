@@ -1,3 +1,4 @@
+from sqlalchemy import true
 from app import app, db, oauth
 from flask import request,render_template, url_for,redirect,session
 from app.models import SensorValue
@@ -5,9 +6,23 @@ import sys
 from app.forms import SelectSensorForm
 from app.forms import SelectSiteForm
 from auth_decorator import login_required
+from datetime import datetime, timedelta
 import json
 
-
+id_to_loc = {
+        '1': 'Location 1',
+        '2': 'Location 2',
+        '3': 'Location 3',
+        '4': 'Location 4',
+        '5': 'Location 5',
+        '6': 'Location 6',
+        '7': 'Location 7',
+        '8': 'Location 8',
+        '9': 'Location 9',
+        '10': 'Location 10',
+        '11': 'Location 11',
+        '12': 'Location 12'
+}
 
 @app.route('/login')
 def login():
@@ -37,8 +52,8 @@ def index():
 @app.route('/dam-information/get-all',methods=['GET'])
 @login_required
 def allSensor():
-   
-    vals = SensorValue.query.order_by(SensorValue.timestamp.desc()).all()
+    seven_days_filter = datetime.today() - timedelta(days = 7)
+    vals = SensorValue.query.order_by(SensorValue.timestamp.desc()).filter(SensorValue.timestamp >= seven_days_filter).all()
     print(vals)
     return render_template('sensorData.html', sensorVals = vals)
 
@@ -46,7 +61,6 @@ def allSensor():
 @login_required
 def selectSensor():
     form = SelectSensorForm()
-
     setOfSensors = set([])
     for a in SensorValue.query.all():
         setOfSensors.add(a.sensor) 
@@ -61,8 +75,8 @@ def selectSensor():
 @app.route('/select-site', methods=['GET', 'POST'])
 @login_required
 def selectSite():
+   
     form = SelectSiteForm()
-
     setOfSites = set([])
     for a in SensorValue.query.all():
         setOfSites.add(a.site) 
@@ -70,6 +84,7 @@ def selectSite():
     form.site.choices = [(g) for g in setOfSites]
 
     if form.validate_on_submit():
+       
         if SensorValue.query.filter_by(site = form.site.data).first() is not None:
             return redirect(url_for( 'particularSite', siteID = form.site.data))
            
@@ -80,7 +95,8 @@ def selectSite():
 @app.route('/dam-information/get/<sensorID>',methods=['GET'])
 @login_required
 def particularSensor(sensorID):
-    vals = SensorValue.query.filter_by(sensor = sensorID).all()
+    seven_days_filter = datetime.today() - timedelta(days = 7)
+    vals = SensorValue.query.filter_by(sensor = sensorID).filter(SensorValue.timestamp >= seven_days_filter).all()
     print(vals)
     graphVals = {"x":[], "y":[], "type":'scatter'}
     for val in vals:
@@ -91,19 +107,36 @@ def particularSensor(sensorID):
     return render_template('sensorData.html', sensorVals = vals, graphVals = json.dumps(graphVals))
 
 
-@app.route('/dam-information/get/site/<siteID>',methods=['GET'])
+@app.route('/dam-information/get/site/<siteID>',methods=['GET', 'POST'])
 @login_required
 def particularSite(siteID):
-
-    vals = SensorValue.query.filter_by(site = siteID).all()
+    form = SelectSensorForm()
+    setOfSensors = set([])
+    for a in SensorValue.query.filter_by(site = siteID):
+        setOfSensors.add(a.sensor) 
+    
+    form.sensor.choices = [(g) for g in setOfSensors]
+    if form.is_submitted():
+        print(form.sensor.data)
+    
+    
+    seven_days_filter = datetime.today() - timedelta(days = 7)
     graphVals = {"x":[], "y":[], "type":'scatter'}
-    for val in vals:
+    vals = []
+    if form.is_submitted():
+        vals = SensorValue.query.filter_by(site = siteID, sensor = form.sensor.data).filter(SensorValue.timestamp >= seven_days_filter).all()
         
-        graphVals["x"].append(val.timestamp.strftime('%m/%d/%Y, %H:%M:%S'))
-        graphVals["y"].append(val.water_depth)
+        for val in vals:
+            
+            graphVals["x"].append(val.timestamp.strftime('%m/%d/%Y, %H:%M:%S'))
+            graphVals["y"].append(val.water_depth)
+    
 
-    return render_template('siteData.html', siteVals = vals, graphVals = json.dumps(graphVals))
+    return render_template('siteData.html', siteVals = vals, graphVals = json.dumps(graphVals), form = form, siteName = id_to_loc[siteID], siteNo = siteID)
 
+@app.route('/prediction')
+def pred(): 
+    return render_template('pred.html')
 
 @app.route('/dam-information/update',methods=['POST'])
 def addDamData():

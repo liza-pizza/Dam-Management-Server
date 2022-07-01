@@ -21,8 +21,39 @@
     <script src="https://cdn.plot.ly/plotly-2.11.1.min.js"></script>
   </head>
 
-  
-      <div class="content">
+  <div class="content">
+
+    {% if siteVals is defined %}
+   <h1>Site Name: {{ siteName}} </h1>
+   <h1>Site Number: {{ siteNo }} </h1>
+    {% endif %}
+
+    <form action="" method="post" novalidate>
+      {{ form.hidden_tag() }}
+      <select
+        name="sensor"
+        id="id_sensor"
+        onchange="this.form.submit()"
+        multiple
+      >
+        {% for val in form.sensor.choices %}
+
+        <option value="{{val}}">Sensor {{val}}</option>
+        {% endfor %}
+      </select>
+    </form>
+
+    <div>
+      {% if siteVals|length > 0 %}
+      <div id="myDiv" style="margin-bottom: 3rem">
+        <!-- Plotly chart will be drawn inside this DIV -->
+      </div>
+      {% endif %}
+    </div>
+    <div style="flex-direction: row; justify-content: space-around">
+      <div>
+        {% if siteVals|length > 0 %}
+
         <table id="data" class="table siteTable">
           <thead>
             <tr>
@@ -43,16 +74,14 @@
             {% endfor %}
           </tbody>
         </table>
+        {% endif %}
       </div>
-
-      <div id="myDiv" style="margin-bottom: 3rem">
-        <!-- Plotly chart will be drawn inside this DIV -->
-      </div>
-   
+      
+    </div>
+  </div>
 
   <script type="text/javascript">
     var data = [{{graphVals | safe}}];
     Plotly.newPlot("myDiv", data);
   </script>
-
 </html>
